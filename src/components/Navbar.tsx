@@ -10,12 +10,14 @@ export const Navbar = () => {
   const navItem = [
     { label: "Main", href: ROUTES.HOME },
     { label: "Users", href: ROUTES.USERS },
+    { label: "Posts", href: ROUTES.POSTS },
+    { label: "Add Post", href: ROUTES.ADD_POST },
   ];
 
   return (
     <header className="bg-white shadow-md">
       <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-        {/* Logo */}
+      
         <h1 className="text-xl font-bold text-blue-600">
           <Link href={ROUTES.HOME}>{"Home App"}</Link>
         </h1>
