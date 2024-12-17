@@ -7,8 +7,17 @@ import { skipToken } from "@reduxjs/toolkit/query";
 import { useState } from "react";
 import PostPage from "./[id]/page";
 import PostItem from "@/components/PostItem/PostItem";
+import { useSelector } from "react-redux";
+import {
+  selectedCurrentPage,
+  selectedPostsPerPage,
+} from "@/store/slices/paginationSlice";
+import { Pagination } from "@/components/Pagination/Pagination";
 
 export const PostsPage = () => {
+  const currentPage = useSelector(selectedCurrentPage);
+  const postsPerPage = useSelector(selectedPostsPerPage);
+  
   const { data: posts = [], isLoading, error } = useGetPostsQuery();
   const [selectedPostId, setSelectedPostId] = useState<string | null>(null);
 
@@ -22,12 +31,18 @@ export const PostsPage = () => {
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error Posts</div>;
 
+  const indexOfLastPost = currentPage * postsPerPage;
+  const indexOfFirstPost = indexOfLastPost - postsPerPage;
+  const currentPosts = posts.slice(indexOfFirstPost, indexOfLastPost);
+
+  const totalPages = Math.ceil(posts.length / postsPerPage);
+
   return (
     <div className="p-4">
       <h1 className="text-2xl font-bold mb-4">List posts</h1>
 
       <ul className="">
-        {posts.map((post: Post) => (
+        {currentPosts.map((post: Post) => (
           <li
             key={post.id}
             className=" mb-2 flex items-center justify-between w-[800px]"
@@ -55,6 +70,11 @@ export const PostsPage = () => {
           )}
         </Modal>
       )}
+
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+      />
     </div>
   );
 };
